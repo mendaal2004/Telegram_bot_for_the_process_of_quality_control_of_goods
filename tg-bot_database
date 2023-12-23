@@ -1,0 +1,195 @@
+import telebot
+from telebot import types
+
+bot = telebot.TeleBot('6834086436:AAE0cojOsaTAw6K5LR6Q6Y9kcHaMoIZnCqk')
+
+@bot.message_handler(commands=['start'])
+def start_mess(message):
+    bot.send_message(message.chat.id, 'Привет! Я бот для автоматизации процесса контроля качества товаров. \n'
+                                      'Отправьте /help, чтобы узнать доступные команды.')
+
+@bot.message_handler(commands=['help'])
+def help_mess(message):
+
+    keyboard = types.InlineKeyboardMarkup(row_width=2)
+
+    button_1 = types.InlineKeyboardButton(text='Диаграмма BPMN', callback_data='BPMN_diagram')
+    button_2 = types.InlineKeyboardButton(text='Дашборд', callback_data='dashboard')
+    button_3 = types.InlineKeyboardButton(text='Оформить отчет', callback_data='issue_a_report')
+    button_4 = types.InlineKeyboardButton(text='Помощь', callback_data='help_with_the_bot')
+
+    keyboard.add(button_1, button_2, button_3, button_4)
+
+    bot.send_message(message.chat.id, 'Выберите действие:', reply_markup=keyboard)
+
+@bot.message_handler(func=lambda message: True)
+def home_screen(message):
+
+    if message.text == 'Диаграмма BPMN':
+        keyboard_1 = types.InlineKeyboardMarkup(row_width=1)
+
+        button_1 = types.InlineKeyboardButton(text='Описание диаграммы BPMN', callback_data='description_of_the_BPMN_diagram')
+        button_2 = types.InlineKeyboardButton(text='Диаграмма BPMN по бизнес-процессу', callback_data='BPMN_Business_Process_diagram')
+
+        keyboard_1.add(button_1, button_2)
+
+        bot.send_message(message.chat.id, 'Выберите действие:', reply_markup=keyboard_1)
+
+    if message.text == 'Дашборд':
+        keyboard_2 = types.InlineKeyboardMarkup(row_width=1)
+
+        button_1 = types.InlineKeyboardButton(text='Описание дашборда', callback_data='dashboard_description')
+        button_2 = types.InlineKeyboardButton('Ссылка на GitHub', url='https://github.com/mendaal2004/The_process_of_quality_control_of_goods')
+        keyboard_2.add(button_1, button_2)
+
+        bot.send_message(message.chat.id, 'Выберите действие:', reply_markup=keyboard_2)
+
+    if message.text == 'Оформить отчет':
+        process_date_step(message)
+
+    if message.text == 'Помощь':
+
+        keyboard_1 = types.InlineKeyboardMarkup(row_width=1)
+
+        button_1 = types.InlineKeyboardButton(text='Возможности бота', callback_data='bot_features')
+        button_2 = types.InlineKeyboardButton(text='Создатель', callback_data='creator')
+
+        keyboard_1.add(button_1, button_2)
+
+        bot.send_message(message.chat.id, 'Чем могу помочь?', reply_markup=keyboard_1)
+
+def process_date_step(message):
+
+    bot.send_message(message.chat.id, 'Для создания отчета введите нужные данные:'
+                                      '\n 1. дата'
+                                      '\n 2. должность'
+                                      '\n 3. номер товара'
+                                      '\n 4. состояние товара')
+
+    bot.send_message(message.chat.id, 'Введите дату в формате дд-мм-гггг:')
+    bot.register_next_step_handler(message, process_position_step)
+
+def process_position_step(message):
+    data = {}
+    data['entered_date'] = message.text
+
+    bot.send_message(message.chat.id, 'Введите должность:'
+                                      '\n 1. рабочий'
+                                      '\n 2. менеджер')
+
+    bot.register_next_step_handler(message, process_product_number_step, data)
+
+def process_product_number_step(message, data):
+    data['selected_position'] = message.text
+
+    bot.send_message(message.chat.id, 'Введите номер товара:')
+    bot.register_next_step_handler(message, process_product_state_step, data)
+
+def process_product_state_step(message, data):
+    data['the_entered_number'] = message.text
+
+    if data['selected_position'] == 'рабочий':
+        bot.send_message(message.chat.id, 'Введите состояние товара:'
+                                          '\n 1. соответствует стандартам качества'
+                                          '\n 2. не соответствует стандартам качества')
+
+    if data['selected_position'] == 'менеджер':
+        bot.send_message(message.chat.id, 'Введите состояние товара:'
+                                          '\n 1. отправить на исправление'
+                                          '\n 2. отправить на утилизацию')
+
+    bot.register_next_step_handler(message, enter_destination, data)
+
+def enter_destination(message, data):
+    data['the_condition_of_the_product'] = message.text
+
+    bot.send_message(message.chat.id, 'Вы ввели все нужные данные')
+
+    report = f'Проверьте правильность введенных данных:\n\n' \
+             f'Дата: {data["entered_date"]}\n' \
+             f'Должность: {data["selected_position"]}\n' \
+             f'Номер товара: {data["the_entered_number"]}\n' \
+             f'Состояние товара: {data["the_condition_of_the_product"]}'
+
+    keyboard = types.InlineKeyboardMarkup(row_width=2)
+
+    button_1 = types.InlineKeyboardButton(text='Все верно', callback_data='yes')
+    button_2 = types.InlineKeyboardButton(text='Начать с начала', callback_data='no')
+
+    keyboard.add(button_1, button_2)
+
+    bot.send_message(message.chat.id, report, reply_markup=keyboard)
+
+@bot.callback_query_handler(func=lambda call: True)
+def callback_handler(call):
+
+    if call.data == 'BPMN_diagram':
+        keyboard_6 = types.InlineKeyboardMarkup(row_width=1)
+
+        button_1 = types.InlineKeyboardButton(text='Описание диаграммы BPMN', callback_data='description_of_the_BPMN_diagram')
+        button_2 = types.InlineKeyboardButton(text='Диаграмма BPMN по бизнес-процессу', callback_data='BPMN_Business_Process_diagram')
+
+        keyboard_6.add(button_1, button_2)
+
+        bot.send_message(call.message.chat.id, 'Выберите действие:', reply_markup=keyboard_6)
+
+    if call.data == 'description_of_the_BPMN_diagram':
+        bot.send_message(call.message.chat.id,
+                         'BPMN (Business Process Model and Notation) – это нотация, предназначенная для описания и визуализации бизнес-процессов.'
+                         'Она предоставляет удобный способ визуализации и описания различных шагов и этапов, которые происходят внутри организации или компании.')
+
+    if call.data == 'BPMN_Business_Process_diagram':
+        bot.send_message(call.message.chat.id,
+                         'Принцип работы диаграммы: рабочий получает товар для контроля качества и проверяет его на соответствие установленным спецификациям и стандартам качества. '
+                         'Если товары соответствуют спецификациям, они передаются на следующий этап. Если нет, создается отчет о несоответствии. '
+                         'Дальше менеджер по качеству принимает решение о дальнейших действиях по несоответствующим товарам. '
+                         'Если невозможно исправить несоответствие, товары отправляются на утилизацию. Если возможно, товары отправляются на исправление. '
+                         'Рабочий проводит работы по исправлению несоответствующих товаров, после чего они проходят повторную проверку качества.'
+                         'Рабочий завершает процесс контроля качества, подготавливая отчет о результатах проверки.')
+        bot.send_photo(call.message.chat.id, 'https://raw.githubusercontent.com/mendaal2004/Telegram_bot_for_the_process_of_quality_control_of_goods/test/BPMN.jpg',
+                       caption='Диаграмма бизнес-процесса "Процесс контроля качества товаров"')
+
+    if call.data == 'dashboard':
+        keyboard_7 = types.InlineKeyboardMarkup(row_width=1)
+
+        button_1 = types.InlineKeyboardButton(text='Описание дашборда', callback_data='dashboard_description')
+        button_2 = types.InlineKeyboardButton('Ссылка на GitHub', url='https://github.com/mendaal2004/The_process_of_quality_control_of_goods')
+        keyboard_7.add(button_1, button_2)
+
+        bot.send_message(call.message.chat.id, 'Выберите действие:', reply_markup=keyboard_7)
+
+    if call.data == 'dashboard_description':
+        bot.send_message(call.message.chat.id, 'Дашборд – это информационная панель, которая получает данные из других систем и отображает их в понятном виде. '
+                                               'На дашбордах используют текст, графики, диаграммы и другие средства визуализации. '
+                                               'Панели получают данные и обновляются автоматически с заданным интервалом или даже в режиме реального времени.')
+
+    if call.data == 'issue_a_report':
+        process_date_step(call.message)
+
+    if call.data == 'help_with_the_bot':
+
+        keyboard_1 = types.InlineKeyboardMarkup(row_width=1)
+
+        button_1 = types.InlineKeyboardButton(text='Возможности бота', callback_data='bot_features')
+        button_2 = types.InlineKeyboardButton(text='Создатель', callback_data='creator')
+
+        keyboard_1.add(button_1, button_2)
+
+        bot.send_message(call.message.chat.id, 'Чем могу помочь?', reply_markup=keyboard_1)
+
+    if call.data == 'bot_features':
+        bot.send_message(call.message.chat.id, 'Бот был создан для автоматизации процесса контроля качества товаров. \n Бот может:'
+                                          '\n 1. объяснить, что такое диаграмма BPMN, предоставить ее по данному бизнес-процессу и объяснить принцип работы'
+                                          '\n 2. объяснить, что такое дашборд, предоставить ссылку на код на GitHub и объяснить принцип работы.'
+                                          '\n 3. оформить отчет о состоянии товара.')
+
+    if call.data == 'creator':
+        bot.send_message(call.message.chat.id, 'Корнева Н.М. 2ИБ-1')
+
+    if call.data == 'yes':
+        bot.send_message(call.message.chat.id, 'Записал')
+
+    if call.data == 'no':
+        process_date_step(call.message)
+
+bot.infinity_polling()
