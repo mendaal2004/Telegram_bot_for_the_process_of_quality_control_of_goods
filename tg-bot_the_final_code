@@ -1,13 +1,17 @@
+# Импорт библиотек и модуля
 import telebot
 from telebot import types
 
+# Создание бота, используя его токен
 bot = telebot.TeleBot('6834086436:AAE0cojOsaTAw6K5LR6Q6Y9kcHaMoIZnCqk')
 
+# Обработчик команды /start, который отправляет приветственное сообщение
 @bot.message_handler(commands=['start'])
 def start_mess(message):
     bot.send_message(message.chat.id, 'Привет! Я бот для автоматизации процесса контроля качества товаров. \n'
                                       'Отправьте /help, чтобы узнать доступные команды.')
 
+# Обработчик команды /help, который создает базовую инлайн-клавиатуру с опциями бота для пользователя
 @bot.message_handler(commands=['help'])
 def help_mess(message):
 
@@ -22,6 +26,7 @@ def help_mess(message):
 
     bot.send_message(message.chat.id, 'Выберите действие:', reply_markup=keyboard)
 
+# Обработчик кнопок, который показывает различные команды при нажатии на кнопку из базовой инлайн-клавиатуры
 @bot.message_handler(func=lambda message: True)
 def home_screen(message):
 
@@ -58,6 +63,7 @@ def home_screen(message):
 
         bot.send_message(message.chat.id, 'Чем могу помочь?', reply_markup=keyboard_1)
 
+# Вызов функции для начала процесса создания отчета. Пользователь вводит дату
 def process_date_step(message):
 
     bot.send_message(message.chat.id, 'Для создания отчета введите нужные данные:'
@@ -69,6 +75,7 @@ def process_date_step(message):
     bot.send_message(message.chat.id, 'Введите дату в формате дд-мм-гггг:')
     bot.register_next_step_handler(message, process_position_step)
 
+# Пользователь вводит должность
 def process_position_step(message):
     data = {}
     data['entered_date'] = message.text
@@ -79,12 +86,14 @@ def process_position_step(message):
 
     bot.register_next_step_handler(message, process_product_number_step, data)
 
+# Пользователь вводит номер товара
 def process_product_number_step(message, data):
     data['selected_position'] = message.text
 
     bot.send_message(message.chat.id, 'Введите номер товара:')
     bot.register_next_step_handler(message, process_product_state_step, data)
 
+# Пользователь вводит состояние товара
 def process_product_state_step(message, data):
     data['the_entered_number'] = message.text
 
@@ -100,6 +109,7 @@ def process_product_state_step(message, data):
 
     bot.register_next_step_handler(message, enter_destination, data)
 
+# Вызов функции для завершения процесса создания отчета. Бот выводит текст с введенными пользователем данными
 def enter_destination(message, data):
     data['the_condition_of_the_product'] = message.text
 
@@ -120,6 +130,7 @@ def enter_destination(message, data):
 
     bot.send_message(message.chat.id, report, reply_markup=keyboard)
 
+# Создание кликабельных кнопок
 @bot.callback_query_handler(func=lambda call: True)
 def callback_handler(call):
 
@@ -133,11 +144,13 @@ def callback_handler(call):
 
         bot.send_message(call.message.chat.id, 'Выберите действие:', reply_markup=keyboard_6)
 
+    # Описание диаграммы BPMN
     if call.data == 'description_of_the_BPMN_diagram':
         bot.send_message(call.message.chat.id,
                          'BPMN (Business Process Model and Notation) – это нотация, предназначенная для описания и визуализации бизнес-процессов.'
                          'Она предоставляет удобный способ визуализации и описания различных шагов и этапов, которые происходят внутри организации или компании.')
 
+    #Диаграмма BPMN по бизнес-процессу
     if call.data == 'BPMN_Business_Process_diagram':
         bot.send_message(call.message.chat.id,
                          'Принцип работы диаграммы: рабочий получает товар для контроля качества и проверяет его на соответствие установленным спецификациям и стандартам качества. '
@@ -158,6 +171,7 @@ def callback_handler(call):
 
         bot.send_message(call.message.chat.id, 'Выберите действие:', reply_markup=keyboard_7)
 
+    # Описание дашборда
     if call.data == 'dashboard_description':
         bot.send_message(call.message.chat.id, 'Дашборд – это информационная панель, которая получает данные из других систем и отображает их в понятном виде. '
                                                'На дашбордах используют текст, графики, диаграммы и другие средства визуализации. '
@@ -178,36 +192,42 @@ def callback_handler(call):
 
         bot.send_message(call.message.chat.id, 'Выберите график:', reply_markup=keyboard_7)
 
+    # Таблица с данными
     if call.data == 'data_table':
         bot.send_photo(call.message.chat.id,
                        'https://raw.githubusercontent.com/mendaal2004/Telegram_bot_for_the_process_of_quality_control_of_goods/test/data_table.jpg',
                        caption='Таблица с данными')
         bot.send_message(call.message.chat.id, 'В таблице представлены данные о времени заката и восхода солнца в каждые дни')
 
+    # Столбчатый график
     if call.data == 'bar_chart':
         bot.send_photo(call.message.chat.id,
                        'https://raw.githubusercontent.com/mendaal2004/Telegram_bot_for_the_process_of_quality_control_of_goods/test/bar_chart.jpg',
                        caption='Столбчатый график')
         bot.send_message(call.message.chat.id, 'На графике представлена зависимость времени восхода солнца от даты')
 
+    # Линейный график
     if call.data == 'line_chart':
         bot.send_photo(call.message.chat.id,
                        'https://raw.githubusercontent.com/mendaal2004/Telegram_bot_for_the_process_of_quality_control_of_goods/test/line_chart.jpg',
                        caption='Линейный график')
         bot.send_message(call.message.chat.id, 'На графике представлена зависимость времени восхода солнца от даты')
 
+    # Выпадающий список
     if call.data == 'drop-down_list':
         bot.send_photo(call.message.chat.id,
                        'https://raw.githubusercontent.com/mendaal2004/Telegram_bot_for_the_process_of_quality_control_of_goods/test/drop-down_list.jpg',
                        caption='Выпадающий список')
         bot.send_message(call.message.chat.id, 'Выпадающий список предоставляет возможность выбрать зависимость чего будем наблюдать на точечном графике')
 
+    # Точечный график
     if call.data == 'scatter_plot':
         bot.send_photo(call.message.chat.id,
                        'https://raw.githubusercontent.com/mendaal2004/Telegram_bot_for_the_process_of_quality_control_of_goods/test/scatter_plot.jpg',
                        caption='Точечный график')
         bot.send_message(call.message.chat.id, 'На графике представлена зависимость времени заката солнца от даты')
 
+    # Вызов функции для начала процесса создания отчета
     if call.data == 'issue_a_report':
         process_date_step(call.message)
 
@@ -222,19 +242,23 @@ def callback_handler(call):
 
         bot.send_message(call.message.chat.id, 'Чем могу помочь?', reply_markup=keyboard_1)
 
+    # Возможности бота
     if call.data == 'bot_features':
         bot.send_message(call.message.chat.id, 'Бот был создан для автоматизации процесса контроля качества товаров. \n Бот может:'
                                           '\n 1. объяснить, что такое диаграмма BPMN, предоставить ее по данному бизнес-процессу и объяснить принцип работы'
                                           '\n 2. объяснить, что такое дашборд, предоставить ссылку на код на GitHub и объяснить принцип работы.'
                                           '\n 3. оформить отчет о состоянии товара.')
 
+    # Создатель
     if call.data == 'creator':
         bot.send_message(call.message.chat.id, 'Корнева Н.М. 2ИБ-1')
 
+    # При нажатии на кнопку "Все верно" бот выводит сообщение и инлайн-клавиатура исчезает
     if call.data == 'yes':
         bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id)
         bot.send_message(call.message.chat.id, 'Записал')
 
+    # При нажатии на кнопку "Начать с начала" бот вызовает функцию для начала процесса создания отчета
     if call.data == 'no':
         process_date_step(call.message)
 
