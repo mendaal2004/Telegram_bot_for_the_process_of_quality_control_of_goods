@@ -187,6 +187,7 @@ def callback_handler(call):
         bot.send_message(call.message.chat.id, 'Корнева Н.М. 2ИБ-1')
 
     if call.data == 'yes':
+        bot.edit_message_reply_markup(call.message.chat.id, call.message.message_id)
         bot.send_message(call.message.chat.id, 'Записал')
 
     if call.data == 'no':
