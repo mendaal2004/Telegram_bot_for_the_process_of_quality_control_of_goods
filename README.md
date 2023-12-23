@@ -34,22 +34,26 @@ pip install telebot
 ![help](https://github.com/mendaal2004/Telegram_bot_for_the_process_of_quality_control_of_goods/assets/134377794/17caeded-96f2-4508-8cc4-a63eb8ab7b8f)
   
   * Диаграмма BPMN\
-    Если Вы нажмете на эту кнопку, то бот выдаст информацию по диаграмме BPMN, объяснит принцип работы и предоставит изображение.
+    
+Если Вы нажмете на эту кнопку, то бот выдаст информацию по диаграмме BPMN, объяснит принцип работы и предоставит изображение.
 
 ![BPMN_diagram](https://github.com/mendaal2004/Telegram_bot_for_the_process_of_quality_control_of_goods/assets/134377794/e188d12e-30d4-4b4b-932d-d853431bc8fb)
   
   * Дашборд\
-    Если Вы нажмете на эту кнопку, то бот выдаст информацию по дашборду, объяснит принцип работы и  предоставит ссылку на код на GitHub
+    
+Если Вы нажмете на эту кнопку, то бот выдаст информацию по дашборду, объяснит принцип работы и  предоставит ссылку на код на GitHub
 
 ![dashboard](https://github.com/mendaal2004/Telegram_bot_for_the_process_of_quality_control_of_goods/assets/134377794/97b100d4-974a-401f-8936-43e9f2d3f365)
     
   * Оформить отчет\
-    Если Вы нажмете на эту кнопку, то бот попросит Вас ввести данные (дата, должность, номер товара, состояние товара) и сформирует отчет о товаре.
+    
+Если Вы нажмете на эту кнопку, то бот попросит Вас ввести данные (дата, должность, номер товара, состояние товара) и сформирует отчет о товаре.
 
 ![issue_a_report](https://github.com/mendaal2004/Telegram_bot_for_the_process_of_quality_control_of_goods/assets/134377794/4f1eec1f-3180-468e-87e6-e780c2138e21)
 
   * Помощь\
-    Если Вы нажмете на эту кнопку, то бот выдаст информацию о возможностях бота.
+    
+Если Вы нажмете на эту кнопку, то бот выдаст информацию о возможностях бота.
 
 ![help_with_the_bot](https://github.com/mendaal2004/Telegram_bot_for_the_process_of_quality_control_of_goods/assets/134377794/f17648ac-94ec-4b8c-b583-27a2a89ab856)
 
