@@ -29,7 +29,7 @@ pip install telebot
 
 ![start](https://github.com/mendaal2004/Telegram_bot_for_the_process_of_quality_control_of_goods/assets/134377794/d72f4b2e-77e3-453c-a214-59e9c8f4d327)
 
-* help - возможности бота. То есть, бот предоставит Вам выбор команд.
+* /help - возможности бота. То есть, бот предоставит Вам выбор команд.
 
 ![help](https://github.com/mendaal2004/Telegram_bot_for_the_process_of_quality_control_of_goods/assets/134377794/17caeded-96f2-4508-8cc4-a63eb8ab7b8f)
   
