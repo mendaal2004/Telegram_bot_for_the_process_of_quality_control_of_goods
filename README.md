@@ -11,13 +11,13 @@
 
 ## Установка и запуск проекта на локальной машине
 1. Выберите место расположения проекта:\
-
-`git clone https://github.com/mendaal2004/Telegram_bot_for_the_process_of_quality_control_of_goods.git`
-
+```
+git clone https://github.com/mendaal2004/Telegram_bot_for_the_process_of_quality_control_of_goods.git
+```
 2. В текстовом редакторе установите библиотеку telebot:\
-
-`pip install telebot`
-
+```
+pip install telebot
+```
 3. Откройте в ветке release коммит the_final_code. Скопируйте код и создайте файл TgBot.py.
 4. Запустите код. Бота можно найти в телеграме @quality_control_of_goods_bot или по ссылке: https://t.me/quality_control_of_goods_bot
 5. Откройте в ветке release коммит dashboard. Скопируйте код и создайте файл Dashboard.py.
